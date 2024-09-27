@@ -47,7 +47,7 @@ if [ $has_error -gt 0 ]; then
     exit 1
 fi
 
-contexts=("Rust" "Web (Node.js + Bun + Playwright)")
+contexts=("Java" "Rust" "Web (Node.js + Bun + Playwright)")
 
 printf "\nPlease select a context (Press 'q' to quit):\n"
 
@@ -123,8 +123,9 @@ select_context() {
 
 map_context() {
     case $1 in
-    0) echo "rust" ;;
-    1) echo "nodejs+bun+playwright" ;;
+    0) echo "java" ;;
+    1) echo "rust" ;;
+    2) echo "nodejs+bun+playwright" ;;
     esac
 }
 

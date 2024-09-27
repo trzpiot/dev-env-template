@@ -33,7 +33,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/trzpiot/dev-env-template/m
 
 ## Templates
 
-There are currently 2 templates.
+There are currently 3 templates.
 
+- Java (LTS)
 - Rust
 - Web (Node.js + Bun + Playwright)
