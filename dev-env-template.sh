@@ -1,18 +1,16 @@
 #!/bin/bash
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
+RED_TEXT="\033[0;31m%s\033[0m"
+GREEN_TEXT="\033[0;32m%s\033[0m"
 
 required_apps=("direnv" "nix")
-invalid_components=0
 
 check_command() {
     if command -v $1 &>/dev/null; then
-        printf "${GREEN}$1 is installed${NC}\n"
+        printf "${GREEN_TEXT}\n" "$1 is installed"
         return 0
     else
-        printf "${RED}$1 is not installed${NC}\n"
+        printf "${RED_TEXT}\n" "$1 is not installed"
         return 1
     fi
 }
@@ -20,36 +18,36 @@ check_command() {
 check_nix_flakes() {
     if nix --version 2>/dev/null | grep -qE "2\.(([4-9]|[1-9][0-9]+)\.[0-9]+|[1-9][0-9]+\.[0-9]+)|[3-9]\.[0-9]+\.[0-9]+|[1-9][0-9]+\.[0-9]+\.[0-9]+"; then
         if nix config show --json 2>/dev/null | grep -qE "experimental-features\s*=\s*.*\bflakes\b.*"; then
-            printf "${GREEN}Nix Flakes are enabled${NC}\n"
+            printf "${GREEN_TEXT}\n" "Nix Flakes are enabled"
             return 0
         else
-            printf "${RED}Nix Flakes are not enabled${NC}\n"
+            printf "${RED_TEXT}\n" "Nix Flakes are not enabled"
             return 1
         fi
     else
-        printf "${RED}Nix version is below 2.4, Flakes are not supported${NC}\n"
+        printf "${RED_TEXT}\n" "Nix version is below 2.4, Flakes are not supported"
         return 1
     fi
 }
 
 for app in "${required_apps[@]}"; do
     check_command "$app"
-    has_error+=$?
+    invalid_components+=$?
 done
 
 if command -v nix &>/dev/null; then
     check_nix_flakes
-    has_error+=$?
+    invalid_components+=$?
 fi
 
-if [ $has_error -gt 0 ]; then
-    printf "\n${RED}Error: Please install/configure the missing component(s) and try again.${NC}"
+if [ $invalid_components -gt 0 ]; then
+    printf "\n${RED_TEXT}\n" "error: Please install/configure the missing component(s) and try again."
     exit 1
 fi
 
 contexts=("Java" "Rust" "Web (Node.js + Bun + Playwright)")
 
-printf "\nPlease select a context (Press 'q' to quit):\n"
+printf "\n%s\n" "Please select a context (Press 'q' to quit):"
 
 select_context() {
     ESC=$(printf "\033")
@@ -141,7 +139,7 @@ fi
 mkdir -p ${custom_path}
 curl -s -L https://github.com/trzpiot/dev-env-template/archive/refs/heads/${choice}.tar.gz | tar xz -C ${custom_path} --strip-component 1
 
-printf "\n${GREEN}Template '${choice}' downloaded to path '${custom_path}'.${NC}\n"
+printf "\n${GREEN_TEXT}" "Template '${choice}' downloaded to path '${custom_path}'."
 
 cd ${custom_path}
 direnv allow
