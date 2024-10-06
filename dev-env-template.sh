@@ -145,3 +145,12 @@ printf "\n${GREEN}Template '${choice}' downloaded to path '${custom_path}'.${NC}
 
 cd ${custom_path}
 direnv allow
+
+printf "\n${GREEN_TEXT}" "direnv allowed."
+
+if [ -d .git ]; then
+    git add flake.nix nix
+    printf "${GREEN_TEXT}" "Necessary template files for Nix Flakes added to Git."
+fi
+
+printf "\n"
